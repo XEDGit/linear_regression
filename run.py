@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import csv
-from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor
 
 # Helpers and functions
