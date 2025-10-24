@@ -20,8 +20,8 @@ def main():
 
     # Generate learning rates (LRs) array in linear space
     n = 100
-    start = 0.095
-    end = 0.5
+    start = 0.01
+    end = 0.25
     step = (end - start) / (n - 1)
     lrs = [start + v * step for v in range(n)]
 
@@ -59,10 +59,20 @@ def main():
     # Pick best weights and estimate against ground truth
     print("best: ", best)
     w = ws[best[0]]
+    estimated = []
+    diff = []
     for k, p, pred in [[km, price, regress(*w, km)] for km, price in data]:
         print(
             f"eval: km: {TRANSLATE(k)}, price: {TRANSLATE(p)}, predicted: {TRANSLATE(pred)}"
         )
+        estimated.append(TRANSLATE(pred))
+        diff.append(TRANSLATE(pred - p))
+
+    avg = sum(estimated) / len(data)
+    diff_avg = [p - avg for p in estimated]
+
+    rsq = 1 - sum([v**2 for v in diff]) / sum([v**2 for v in diff_avg])
+    print(f"{rsq=}")
 
     # Plot estimations in linear space against data points
     n = 100
@@ -104,4 +114,9 @@ def train(index, data, epochs, lr):
 
 
 if __name__ == "__main__":
+    import time
+
+    start = time.perf_counter()
     main()
+    end = time.perf_counter()
+    print(f"Timer: {end - start}")
